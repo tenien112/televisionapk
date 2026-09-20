@@ -1,0 +1,18 @@
+// Espejo de Maven Central en Google: Maven Central a veces responde 403 a los servidores de GitHub
+pluginManagement {
+    repositories {
+        google()
+        maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositories {
+        google()
+        maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
+        mavenCentral()
+    }
+}
+rootProject.name = "TELE-LORENZITO"
+include ':app'
