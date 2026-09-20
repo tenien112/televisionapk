@@ -1,0 +1,44 @@
+plugins {
+    id 'com.android.application'
+}
+
+def numero = (System.getenv('GITHUB_RUN_NUMBER') ?: '1') as Integer
+
+android {
+    namespace 'es.lorenzito.tele'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'es.lorenzito.tele'
+        minSdk 26
+        targetSdk 34
+        versionCode numero
+        versionName '1.0.' + numero
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('../firma.jks')
+            storePassword 'lorenzito'
+            keyAlias 'tele'
+            keyPassword 'lorenzito'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
