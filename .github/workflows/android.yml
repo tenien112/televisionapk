@@ -29,6 +29,27 @@ jobs:
           mkdir -p android/app/src/main/res/mipmap-xxxhdpi
           cp icon-512.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
 
+      - name: Banner para la pantalla de inicio de Android TV / Google TV
+        run: |
+          pip install --quiet pillow
+          python3 - <<'EOF'
+          import os
+          from PIL import Image, ImageDraw, ImageFont
+          W, H = 320, 180
+          b = Image.new("RGB", (W, H), "#101A2E")
+          ic = Image.open("icon-512.png").convert("RGBA").resize((116, 116), Image.LANCZOS)
+          b.paste(ic, (18, 32), ic)
+          d = ImageDraw.Draw(b)
+          def fuente(t):
+              for f in ["/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed-Bold.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"]:
+                  if os.path.exists(f): return ImageFont.truetype(f, t)
+              return ImageFont.load_default()
+          d.text((150, 50), "TELE", font=fuente(40), fill="#E9EEF7")
+          d.text((151, 98), "LORENZITO", font=fuente(22), fill="#FF5A4E")
+          os.makedirs("android/app/src/main/res/drawable-xhdpi", exist_ok=True)
+          b.save("android/app/src/main/res/drawable-xhdpi/banner.png")
+          EOF
+
       - name: Firma (se crea la primera vez y se guarda para que las actualizaciones se instalen encima)
         run: |
           if [ ! -f android/firma.jks ]; then
@@ -52,6 +73,6 @@ jobs:
         with:
           tag_name: apk-${{ github.run_number }}
           name: TELE-LORENZITO Android ${{ github.run_number }}
-          body: App Android de TELE-LORENZITO. Descarga TELE-LORENZITO.apk desde el móvil e instálala.
+          body: App Android de TELE-LORENZITO para el móvil y para la tele (Mi Box / Google TV). Descarga TELE-LORENZITO.apk e instálala.
           files: TELE-LORENZITO.apk
           make_latest: true
